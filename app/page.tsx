@@ -23,7 +23,7 @@ const TransactionsPage = () => {
   useEffect(() => {
     // Mark the component as hydrated on the client side
     setIsHydrated(true);
-
+    setItemsPerPage(10);
     // Fetch data from local JSON file
     fetch("/data/transactions.json")
       .then((response) => response.json())
