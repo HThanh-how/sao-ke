@@ -17,7 +17,7 @@ const TransactionsPage = () => {
     key: keyof Transaction;
     direction: string;
   } | null>(null);
-  const [goToPage, setGoToPage] = useState<number | "">("");
+  // const [goToPage, setGoToPage] = useState<number | "">("");
   const [isHydrated, setIsHydrated] = useState(false); // Check if component is hydrated
 
   useEffect(() => {
@@ -87,12 +87,12 @@ const TransactionsPage = () => {
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
-  const handleGoToPage = () => {
-    if (typeof goToPage === "number" && goToPage >= 1 && goToPage <= totalPages) {
-      setCurrentPage(goToPage);
-      setGoToPage(""); // Reset input field
-    }
-  };
+  // const handleGoToPage = () => {
+  //   if (typeof goToPage === "number" && goToPage >= 1 && goToPage <= totalPages) {
+  //     setCurrentPage(goToPage);
+  //     setGoToPage(""); // Reset input field
+  //   }
+  // };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gray-900 text-white">
