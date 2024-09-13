@@ -17,7 +17,6 @@ const TransactionsPage = () => {
     key: keyof Transaction;
     direction: string;
   } | null>(null);
-  // const [goToPage, setGoToPage] = useState<number | "">("");
   const [isHydrated, setIsHydrated] = useState(false); // Check if component is hydrated
 
   useEffect(() => {
@@ -29,6 +28,13 @@ const TransactionsPage = () => {
       .then((response) => response.json())
       .then((data) => setTransactions(data.transactions));
   }, []);
+
+  // Normalize function to remove diacritics
+  const normalizeString = (str: string) =>
+    str
+      .normalize('NFD') // Split characters and accents
+      .replace(/[\u0300-\u036f]/g, '') // Remove accents
+      .toLowerCase(); // Convert to lowercase
 
   // Prevent rendering before hydration
   if (!isHydrated) {
@@ -67,12 +73,22 @@ const TransactionsPage = () => {
     return 0;
   });
 
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearchTerm(value);
+
+    // Automatically go to page 1 if search term length is more than 3 characters
+    if (value.length >= 3) {
+      setCurrentPage(1);
+    }
+  };
+
   const filteredTransactions = sortedTransactions.filter((transaction) => {
     if (searchTerm.length < 3) {
       return true; // If less than 3 characters, show all transactions
     }
     return Object.values(transaction).some((value) =>
-      value.toLowerCase().includes(searchTerm.toLowerCase())
+      normalizeString(value).includes(normalizeString(searchTerm))
     );
   });
 
@@ -87,13 +103,6 @@ const TransactionsPage = () => {
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
-  // const handleGoToPage = () => {
-  //   if (typeof goToPage === "number" && goToPage >= 1 && goToPage <= totalPages) {
-  //     setCurrentPage(goToPage);
-  //     setGoToPage(""); // Reset input field
-  //   }
-  // };
-
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gray-900 text-white">
       <h1 className="text-3xl font-bold mb-6 text-white">Bảng Giao Dịch</h1>
@@ -101,9 +110,9 @@ const TransactionsPage = () => {
       <div className="mb-6 mx-4 w-full max-w-xl sm:max-w-3xl">
         <input
           type="text"
-          placeholder="Nhập nộp dung chuyển khoản, số tiền, mã giao dịch..."
+          placeholder="Nhập nội dung chuyển khoản, số tiền, mã giao dịch..."
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={handleSearchChange}
           className="w-full px-4 py-2 border border-gray-700 bg-gray-800 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-white"
         />
         <p className="text-sm text-gray-400 mt-2">
@@ -182,25 +191,6 @@ const TransactionsPage = () => {
             </button>
           )}
         </div>
-
-        {/* "Đi đến trang" sẽ xuống dòng ở mobile */}
-        {/* <div className="flex flex-col sm:flex-row items-center justify-center ml-4 space-y-2 sm:space-y-0">
-          <input
-            type="number"
-            placeholder="Đi đến trang..."
-            value={goToPage}
-            onChange={(e) => setGoToPage(Number(e.target.value))}
-            className="px-4 py-2 border border-gray-700 bg-gray-800 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-white mr-2 sm:mr-0"
-            min={1}
-            max={totalPages}
-          />
-          <button
-            onClick={handleGoToPage}
-            className="px-4 py-2 bg-indigo-600 text-white rounded-md shadow-sm hover:bg-indigo-500"
-          >
-            Đi
-          </button>
-        </div> */}
       </div>
     </div>
   );
