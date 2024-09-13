@@ -98,10 +98,10 @@ const TransactionsPage = () => {
     <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gray-900 text-white">
       <h1 className="text-3xl font-bold mb-6 text-white">Bảng Giao Dịch</h1>
 
-      <div className="mb-6 w-full max-w-md">
+      <div className="mb-6 mx-4 w-full max-w-xl sm:max-w-3xl">
         <input
           type="text"
-          placeholder="Tìm kiếm..."
+          placeholder="Nhập nộp dung chuyển khoản, số tiền, mã giao dịch..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="w-full px-4 py-2 border border-gray-700 bg-gray-800 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-white"
@@ -111,8 +111,8 @@ const TransactionsPage = () => {
         </p>
       </div>
 
-      {/* Updated: Fixed table width with 90% for large screens */}
-      <div className="overflow-x-auto w-[90%] lg:w-[90%] sm:w-full">
+      {/* Updated: Table now takes 95% width on mobile and 90% on larger screens */}
+      <div className="overflow-x-auto w-[95%] sm:w-[90%]">
         <table className="table-auto w-full bg-gray-800 shadow-lg rounded-lg">
           <thead className="bg-gray-700 text-gray-300">
             <tr>
@@ -120,53 +120,37 @@ const TransactionsPage = () => {
                 className="px-4 py-2 cursor-pointer hover:bg-gray-600"
                 onClick={() => handleSort("date")}
               >
-                Ngày GD
+                Ngày & Mã GD
               </th>
               <th
                 className="px-4 py-2 cursor-pointer hover:bg-gray-600"
                 onClick={() => handleSort("amount")}
               >
-                Số tiền ghi nợ
+                Số tiền
               </th>
               <th
                 className="px-4 py-2 cursor-pointer hover:bg-gray-600"
                 onClick={() => handleSort("details")}
               >
-                Số tiền ghi có
-              </th>
-              <th
-                className="px-4 py-2 cursor-pointer hover:bg-gray-600"
-                onClick={() => handleSort("transaction_code")}
-              >
-                Mã số GD
+                Nội dung
               </th>
             </tr>
           </thead>
           <tbody>
             {currentTransactions.map((transaction, index) => (
               <tr key={index} className="border-b border-gray-700 hover:bg-gray-700">
-                <td className="px-4 py-2 text-center text-gray-300">{transaction.date}</td>
+                <td className="px-4 py-2 text-center text-gray-300">
+                  {transaction.date} <br /> {transaction.transaction_code}
+                </td>
                 <td className="px-4 py-2 text-center text-gray-300">{transaction.amount}</td>
                 <td className="px-4 py-2 text-center text-gray-300">{transaction.details}</td>
-                <td className="px-4 py-2 text-center text-gray-300">{transaction.transaction_code}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
 
-      <div className="flex justify-between items-center w-[90%] lg:w-[90%] sm:w-full mt-6">
-        <div className="flex items-center">
-          <span className="mr-2 text-gray-300">Số dòng mỗi trang:</span>
-          <input
-            type="number"
-            value={itemsPerPage}
-            onChange={(e) => setItemsPerPage(Number(e.target.value))}
-            className="px-2 py-1 border border-gray-700 bg-gray-800 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            min={1}
-          />
-        </div>
-
+      <div className="flex flex-col sm:flex-row justify-between items-center w-[95%] sm:w-[90%] mt-6 space-y-4 sm:space-y-0">
         <div className="flex items-center space-x-2">
           {currentPage > 1 && (
             <button
@@ -182,9 +166,7 @@ const TransactionsPage = () => {
               key={index}
               onClick={() => paginate(startPage + index)}
               className={`px-3 py-1 border border-gray-600 rounded-md ${
-                currentPage === startPage + index
-                  ? "bg-gray-600 text-white"
-                  : "bg-gray-800 text-white"
+                currentPage === startPage + index ? "bg-gray-600 text-white" : "bg-gray-800 text-white"
               } hover:bg-gray-700`}
             >
               {startPage + index}
@@ -201,13 +183,14 @@ const TransactionsPage = () => {
           )}
         </div>
 
-        <div className="flex items-center justify-center ml-4">
+        {/* "Đi đến trang" sẽ xuống dòng ở mobile */}
+        {/* <div className="flex flex-col sm:flex-row items-center justify-center ml-4 space-y-2 sm:space-y-0">
           <input
             type="number"
             placeholder="Đi đến trang..."
             value={goToPage}
             onChange={(e) => setGoToPage(Number(e.target.value))}
-            className="px-4 py-2 border border-gray-700 bg-gray-800 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-white mr-2"
+            className="px-4 py-2 border border-gray-700 bg-gray-800 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-white mr-2 sm:mr-0"
             min={1}
             max={totalPages}
           />
@@ -217,7 +200,7 @@ const TransactionsPage = () => {
           >
             Đi
           </button>
-        </div>
+        </div> */}
       </div>
     </div>
   );
