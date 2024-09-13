@@ -24,6 +24,8 @@ const TransactionsPage = () => {
   
   useEffect(() => {
     // Đánh dấu component đã hydrat hóa
+    setItemsPerPage(10);
+    setSearchTerm(searchTerm)
     setIsHydrated(true);
     fetchData(""); // Tải dữ liệu ban đầu
   }, []);
